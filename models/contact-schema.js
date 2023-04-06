@@ -1,4 +1,31 @@
+const { Schema, model } = require("mongoose");
+
 const Joi = require("joi");
+const { handleMongooseError } = require("../utils");
+
+const contactSchema = new Schema(
+  {
+    name: {
+      type: String,
+      required: [true, "Set name for contact"],
+    },
+    email: {
+        type: String,
+        required: [true, "Set email for contact"],
+    },
+    phone: {
+      type: String,
+      required: [true, "Set phone number for contact"],
+    },
+    favorite: {
+      type: Boolean,
+      default: false,
+    },
+  },
+  { versionKey: false }
+);
+
+contactSchema.post('save', handleMongooseError);
 
 const addSchema = Joi.object({
   name: Joi.string().min(3).required().messages({
@@ -24,6 +51,7 @@ const addSchema = Joi.object({
       "string.pattern.base":
         "Phone number must be in the format (XXX) XXX-XXXX",
     }),
+  favorite: Joi.boolean().default(false),
 });
 
 const updateSchema = Joi.object({
@@ -45,7 +73,15 @@ const updateSchema = Joi.object({
     }),
 }).or("name", "email", "phone");
 
+const updateFavoriteSchema = Joi.object({
+  favorite: Joi.boolean().required(),
+});
+
+const Contact = model("Contact", contactSchema);
+
 module.exports = {
+  Contact,
   addSchema,
   updateSchema,
+  updateFavoriteSchema,
 };
