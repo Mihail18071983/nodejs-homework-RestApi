@@ -1,4 +1,4 @@
-const Contact = require("../models/contact-schema");
+const { Contact } = require("../models/contact-schema");
 const HttpError = require("../helpers/HttpError");
 const { ctrlWrapper } = require("../utils");
 
@@ -34,7 +34,7 @@ const deleteContactById = async (req, res) => {
 
 const updateContactById = async (req, res) => {
   if (!Object.keys(req.body).length) {
-    throw HttpError(400);
+    throw HttpError(400, "missing field favorite");
   }
   const { contactId: id } = req.params;
   const result = await Contact.findByIdAndUpdate(id, req.body, { new: true });
@@ -48,14 +48,16 @@ const updateContactById = async (req, res) => {
 };
 
 const updateStatusContact = async (req, res) => {
-  const { id } = req.params;
+  if (!Object.keys(req.body).length) {
+    throw HttpError(400);
+  }
+  const { contactId: id } = req.params;
   const result = await Contact.findByIdAndUpdate(id, req.body, { new: true });
   if (!result) {
     throw HttpError(404);
   }
   res.json(result);
 };
-
 
 module.exports = {
   getAllContacts: ctrlWrapper(getAllContacts),
