@@ -3,7 +3,7 @@ const { Schema, model } = require("mongoose");
 const Joi = require("joi");
 const { handleMongooseError } = require("../utils");
 
-const passwordRegexp = /^[a-zA-Z0-9]+$/;
+const passwordRegexp = /^[0-9]+$/;
 const emailRegexp = /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/;
 
 const userSchema = new Schema(
@@ -11,7 +11,7 @@ const userSchema = new Schema(
     password: {
       type: String,
       required: [true, "Set password for user"],
-      match: passwordRegexp,
+      // match: passwordRegexp,
     },
     email: {
       type: String,
@@ -38,6 +38,7 @@ userSchema.post("save", handleMongooseError);
 const authSchema = Joi.object({
   email: Joi.string().pattern(emailRegexp).required(),
   password: Joi.string().pattern(passwordRegexp).required(),
+  // password: Joi.string().required(),
 });
 
 const User = model("user", userSchema);
