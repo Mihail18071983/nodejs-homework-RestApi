@@ -75,9 +75,23 @@ const logout = async (req, res) => {
   });
 };
 
+const updateUserSubscription = async (req, res) => {
+  const { subscription } = req.body;
+  const { _id } = req.user;
+
+  const updatedUser = await User.findByIdAndUpdate(
+    _id,
+    { subscription },
+    { new: true }
+  );
+
+  res.json(updatedUser);
+};
+
 module.exports = {
   register: ctrlWrapper(register),
   login: ctrlWrapper(login),
   getCurrent: ctrlWrapper(getCurrent),
-  logout:ctrlWrapper(logout),
+  logout: ctrlWrapper(logout),
+  updateUserSubscription: ctrlWrapper(updateUserSubscription),
 };
