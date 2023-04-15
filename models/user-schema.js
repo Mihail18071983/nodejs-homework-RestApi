@@ -11,7 +11,6 @@ const userSchema = new Schema(
     password: {
       type: String,
       required: [true, "Set password for user"],
-      // match: passwordRegexp,
     },
     email: {
       type: String,
@@ -38,7 +37,6 @@ userSchema.post("save", handleMongooseError);
 const authSchema = Joi.object({
   email: Joi.string().pattern(emailRegexp).required(),
   password: Joi.string().pattern(passwordRegexp).required(),
-  // password: Joi.string().required(),
 });
 
 const User = model("user", userSchema);
