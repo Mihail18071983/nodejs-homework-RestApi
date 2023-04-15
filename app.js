@@ -4,6 +4,9 @@ const cors = require('cors')
 
 require("dotenv").config()
 
+console.log(process.env.SECRET_KEY);
+
+
 const authRouter = require('./routes/api/user-routes')
 const contactsRouter = require('./routes/api/contacts-routes')
 

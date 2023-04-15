@@ -9,6 +9,9 @@ const { HttpError } = require("../helpers");
 
 const { SECRET_KEY } = process.env;
 
+console.log(SECRET_KEY)
+
+
 const register = async (req, res) => {
   const { email, password } = req.body;
   console.log(req.body);
@@ -46,6 +49,7 @@ const login = async (req, res) => {
   };
 
   const token = jwt.sign(payload, SECRET_KEY, { expiresIn: "23h" });
+  await User.findByIdAndUpdate(user._id, { token });
 
   res.json({
     token,
