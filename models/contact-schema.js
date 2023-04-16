@@ -12,10 +12,12 @@ const contactSchema = new Schema(
     email: {
       type: String,
       required: [true, "Set email for contact"],
+      unique: true, 
     },
     phone: {
       type: String,
       required: [true, "Set phone number for contact"],
+      unique: true,
     },
     favorite: {
       type: Boolean,
