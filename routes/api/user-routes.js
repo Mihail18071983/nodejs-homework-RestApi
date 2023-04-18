@@ -4,7 +4,7 @@ const ctrl = require("../../controllers/user-controllers");
 
 const { validateBody } = require("../../utils");
 
-const { authenticate } = require("../../middlewares");
+const { authenticate, upload } = require("../../middlewares");
 
 const { authSchema } = require("../../models/user-schema");
 
@@ -17,6 +17,8 @@ router.post("/login", validateBody(authSchema), ctrl.login);
 router.get("/current", authenticate, ctrl.getCurrent);
 
 router.post("/logout", authenticate, ctrl.logout);
+
+router.patch('/avatars', authenticate, upload.single('avatar'), ctrl.updateAvatar)
 
 router.patch(
   "/",
