@@ -12,6 +12,8 @@ const router = express.Router();
 
 router.post("/register", validateBody(authSchema), ctrl.register);
 
+router.get("/verify/:verificationToken", ctrl.verify);
+
 router.post("/login", validateBody(authSchema), ctrl.login);
 
 router.get("/current", authenticate, ctrl.getCurrent);
@@ -26,5 +28,6 @@ router.patch(
   validateBody(authSchema),
   ctrl.updateUserSubscription
 );
+
 
 module.exports = router;
