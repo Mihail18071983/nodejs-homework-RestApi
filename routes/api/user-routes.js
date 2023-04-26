@@ -6,13 +6,15 @@ const { validateBody } = require("../../utils");
 
 const { authenticate, upload } = require("../../middlewares");
 
-const { authSchema } = require("../../models/user-schema");
+const { authSchema, emailSchema } = require("../../models/user-schema");
 
 const router = express.Router();
 
 router.post("/register", validateBody(authSchema), ctrl.register);
 
 router.get("/verify/:verificationToken", ctrl.verify);
+
+router.post("/verify", validateBody(emailSchema), ctrl.resendVerifyEmail);
 
 router.post("/login", validateBody(authSchema), ctrl.login);
 

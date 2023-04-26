@@ -55,6 +55,10 @@ const authSchema = Joi.object({
     .default("starter"),
 });
 
+const emailSchema = Joi.object({
+  email: Joi.string().pattern(emailRegexp).required(),
+});
+
 const User = model("user", userSchema);
 
-module.exports = { User, authSchema };
+module.exports = { User, authSchema, emailSchema };
