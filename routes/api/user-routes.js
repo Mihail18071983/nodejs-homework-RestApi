@@ -10,6 +10,10 @@ const { authSchema, emailSchema, refreshSchema } = require("../../models/user-sc
 
 const router = express.Router();
 
+router.get('/', (req, res) => {
+  res.send('Welcome to Phone book API!');
+});
+
 router.post("/register", validateBody(authSchema), ctrl.register);
 
 // router.get("/verify/:verificationToken", ctrl.verify);
