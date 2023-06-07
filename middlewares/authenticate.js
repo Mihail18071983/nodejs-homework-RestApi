@@ -4,7 +4,7 @@ const { User } = require("../models/user-schema");
 
 const { HttpError } = require("../helpers");
 
-const { SECRET_KEY } = process.env;
+const { ACCESS_SECRET_KEY } = process.env;
 
 
 const authenticate = async (req, res, next) => {
@@ -16,10 +16,10 @@ const authenticate = async (req, res, next) => {
     }
 
     try {
-        const { id } = jwt.verify(token, SECRET_KEY);
+        const { id } = jwt.verify(token, ACCESS_SECRET_KEY);
         console.log(id);
         const user = await User.findById(id);
-        console.log('user Token',user.token);
+        console.log('user Token',user.accessToken);
         if (!user || !user.token) {
             next(HttpError(401));
         }

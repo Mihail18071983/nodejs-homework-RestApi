@@ -9,7 +9,7 @@ module.exports = {
   parserOptions: {
     ecmaVersion: 12,
   },
-  rules: {},
+  rules: { "no-unused-vars": ["warn", { "vars": "all", "args": "none" }] },
   globals: {
     describe: "readonly",
     it: "readonly",

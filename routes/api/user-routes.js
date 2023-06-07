@@ -6,17 +6,19 @@ const { validateBody } = require("../../utils");
 
 const { authenticate, upload } = require("../../middlewares");
 
-const { authSchema, emailSchema } = require("../../models/user-schema");
+const { authSchema, emailSchema, refreshSchema } = require("../../models/user-schema");
 
 const router = express.Router();
 
 router.post("/register", validateBody(authSchema), ctrl.register);
 
-router.get("/verify/:verificationToken", ctrl.verify);
+// router.get("/verify/:verificationToken", ctrl.verify);
 
-router.post("/verify", validateBody(emailSchema), ctrl.resendVerifyEmail);
+// router.post("/verify", validateBody(emailSchema), ctrl.resendVerifyEmail);
 
 router.post("/login", validateBody(authSchema), ctrl.login);
+
+router.post("/refresh", validateBody(refreshSchema), ctrl.refresh);
 
 router.get("/current", authenticate, ctrl.getCurrent);
 

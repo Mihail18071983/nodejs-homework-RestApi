@@ -3,7 +3,8 @@ const { Schema, model } = require("mongoose");
 const Joi = require("joi");
 const { handleMongooseError } = require("../utils");
 
-const passwordRegexp = /^[0-9]+$/;
+const nameRegexp = /^[a-zA-Z0-9_-]{3,16}$/
+const passwordRegexp = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{6,}$/;
 const emailRegexp =
   /^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}(\s[A-Za-z0-9._%+-]+)?$/;
 
@@ -19,12 +20,22 @@ const userSchema = new Schema(
       unique: true,
       match: emailRegexp,
     },
+    name: {
+      type: String,
+      required: [true, "Name is required"],
+    },
+
     subscription: {
       type: String,
       enum: ["starter", "pro", "business"],
       default: "starter",
     },
-    token: String,
+    accessToken: {
+      type: String,
+    },
+    refreshToken: {
+      type: String,
+    },
     owner: {
       type: Schema.Types.ObjectId,
       ref: "user",
@@ -33,14 +44,14 @@ const userSchema = new Schema(
       type: String,
       required: true,
     },
-    verify: {
-      type: Boolean,
-      default: false,
-    },
-    verificationToken: {
-      type: String,
-      required: [true, "Verify token is required"],
-    },
+    // verify: {
+    //   type: Boolean,
+    //   default: false,
+    // },
+    // verificationToken: {
+    //   type: String,
+    //   required: [true, "Verify token is required"],
+    // },
   },
   { versionKey: false }
 );
@@ -48,6 +59,7 @@ const userSchema = new Schema(
 userSchema.post("save", handleMongooseError);
 
 const authSchema = Joi.object({
+  name: Joi.string().pattern(nameRegexp).required(),
   email: Joi.string().pattern(emailRegexp).required(),
   password: Joi.string().pattern(passwordRegexp).required(),
   subscription: Joi.string()
@@ -59,6 +71,10 @@ const emailSchema = Joi.object({
   email: Joi.string().pattern(emailRegexp).required(),
 });
 
+const refreshSchema = Joi.object({
+  refreshToken: Joi.string().required(),
+})
+
 const User = model("user", userSchema);
 
-module.exports = { User, authSchema, emailSchema };
+module.exports = { User, authSchema, emailSchema, refreshSchema };
