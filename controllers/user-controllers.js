@@ -4,13 +4,12 @@ const gravatar = require("gravatar");
 const fs = require("fs/promises");
 const path = require("path");
 const Jimp = require("jimp");
-// const { nanoid } = require("nanoid");
 
 const { ctrlWrapper } = require("../utils");
 
 const { User } = require("../models/user-schema");
 
-const { HttpError} = require("../helpers");
+const { HttpError } = require("../helpers");
 
 const { ACCESS_SECRET_KEY, REFRESH_SECRET_KEY } = process.env;
 
@@ -25,13 +24,11 @@ const register = async (req, res) => {
 
   const hashPassword = await bcrypt.hash(password, 10);
   const avatarURL = gravatar.url(email);
-  // const verificationToken = nanoid();
 
   const result = await User.create({
     ...req.body,
     password: hashPassword,
     avatarURL,
-    // verificationToken,
   });
 
   const payload = {
@@ -39,72 +36,17 @@ const register = async (req, res) => {
   };
 
   const accessToken = jwt.sign(payload, ACCESS_SECRET_KEY, { expiresIn: "2m" });
-  const refreshToken = jwt.sign(payload, REFRESH_SECRET_KEY, { expiresIn: "7d" });
+  const refreshToken = jwt.sign(payload, REFRESH_SECRET_KEY, {
+    expiresIn: "7d",
+  });
   await User.findByIdAndUpdate(result._id, { accessToken, refreshToken });
-
-  
-  // const verifyEmail = {
-  //   to: email,
-  //   subject: "Verify email",
-  //   html: `<a target="_blank" href="${BASE_URL}/api/users/verify/${verificationToken}">Click verify email</a>`,
-  // };
-
-  // await sendEmail(verifyEmail);
-
   res.status(201).json({
     email: result.email,
-    name: result.name
+    name: result.name,
+    token: accessToken,
+    refreshToken,
   });
 };
-
-// const verify = async (req, res) => {
-//   const { verificationToken } = req.params;
-//   const user = await User.findOne({ verificationToken });
-//   if (!user) {
-//     throw HttpError(404, "User not found");
-//   }
-
-//   await User.findByIdAndUpdate(user._id, {
-//     verify: true,
-//     verificationToken: null,
-//   });
-
-//   res.json({
-//     message: "Verification successful",
-//   });
-// };
-
-// const resendVerifyEmail = async (req, res) => {
-//   const { email } = req.body;
-//   if (!email) {
-//     throw HttpError(400, "missing required field email");
-//   }
-//   const user = await User.findOne({ email });
-//   if (!user) {
-//     throw HttpError(404, "Email not found");
-//   }
-//   if (user.verify) {
-//     throw HttpError(400, "Verification has already been passed");
-//   }
-
-//   await User.findByIdAndUpdate(user._id, {
-//     verify: true,
-//     verificationToken: null,
-//   });
-
-//   const verifyEmail = {
-//     to: email,
-//     subject: "Verify email",
-//     html: `<a target="_blank" href="${BASE_URL}/api/users/verify/${user.verificationToken}">Click verify email</a>`,
-//   };
-  
-//   await sendEmail(verifyEmail);
-
-//   res.json({
-//     message: "Verification email was sent",
-//   });
-// };
-
 
 const login = async (req, res) => {
   const { email, password } = req.body;
@@ -113,10 +55,6 @@ const login = async (req, res) => {
   if (!user) {
     throw HttpError(401, "Email or password is wrong");
   }
-
-  // if (!user.verify) {
-  //   throw HttpError(401, "Email is not verified");
-  // }
 
   const passwordCompare = await bcrypt.compare(password, user.password);
   if (!passwordCompare) {
@@ -128,7 +66,9 @@ const login = async (req, res) => {
   };
 
   const accessToken = jwt.sign(payload, ACCESS_SECRET_KEY, { expiresIn: "2m" });
-  const refreshToken = jwt.sign(payload, REFRESH_SECRET_KEY, { expiresIn: "7d" });
+  const refreshToken = jwt.sign(payload, REFRESH_SECRET_KEY, {
+    expiresIn: "7d",
+  });
   await User.findByIdAndUpdate(user._id, { accessToken, refreshToken });
 
   res.json({
@@ -141,32 +81,36 @@ const login = async (req, res) => {
 };
 
 const refresh = async (req, res) => {
-  const { refreshToken:token } = req.body;
+  const { refreshToken: token } = req.body;
   try {
     const { id } = jwt.verify(token, REFRESH_SECRET_KEY);
-    const isExist = await User.findOne({ refreshToken:token });
+    const isExist = await User.findOne({ refreshToken: token });
 
-    if (!isExist) { 
-      throw HttpError(403, "Token invalid")
+    if (!isExist) {
+      throw HttpError(403, "Token invalid");
     }
 
     const payload = {
       id,
     };
 
-    const accessToken = jwt.sign(payload, ACCESS_SECRET_KEY, { expiresIn: "2m" });
-    const refreshToken = jwt.sign(payload, REFRESH_SECRET_KEY, { expiresIn: "7d" });
+    const accessToken = jwt.sign(payload, ACCESS_SECRET_KEY, {
+      expiresIn: "2m",
+    });
+    const refreshToken = jwt.sign(payload, REFRESH_SECRET_KEY, {
+      expiresIn: "7d",
+    });
     res.json({
-      accessToken, refreshToken
-    })
+      accessToken,
+      refreshToken,
+    });
+  } catch (err) {
+    throw HttpError(403, err.message);
   }
-  catch (err) { 
-    throw HttpError(403, err.message)
-  }
-
-}
+};
 
 const getCurrent = async (req, res) => {
+  console.log("getCurrent route handler called");
   const { name, email, subscription } = req.user;
 
   res.json({
@@ -178,7 +122,7 @@ const getCurrent = async (req, res) => {
 
 const logout = async (req, res) => {
   const { _id } = req.user;
-  await User.findByIdAndUpdate(_id, { accessToken: "", refreshToken: ""});
+  await User.findByIdAndUpdate(_id, { accessToken: "", refreshToken: "" });
 
   res.status(204).json({
     message: "Successfully logged out",
@@ -213,8 +157,6 @@ const updateAvatar = async (req, res) => {
 
 module.exports = {
   register: ctrlWrapper(register),
-  // verify: ctrlWrapper(verify),
-  // resendVerifyEmail: ctrlWrapper(resendVerifyEmail),
   refresh: ctrlWrapper(refresh),
   login: ctrlWrapper(login),
   getCurrent: ctrlWrapper(getCurrent),

@@ -8,6 +8,7 @@ const { ACCESS_SECRET_KEY } = process.env;
 
 
 const authenticate = async (req, res, next) => {
+    console.log('authenticate middleware called');
     const { authorization = " " } = req.headers;
     console.log(authorization)
     const [bearer, token] = authorization.split(" ");
@@ -17,10 +18,10 @@ const authenticate = async (req, res, next) => {
 
     try {
         const { id } = jwt.verify(token, ACCESS_SECRET_KEY);
-        console.log(id);
+        console.log('id', id);
         const user = await User.findById(id);
         console.log('user Token',user.accessToken);
-        if (!user || !user.token) {
+        if (!user || !user.accessToken) {
             next(HttpError(401));
         }
         req.user = user;

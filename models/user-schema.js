@@ -44,14 +44,6 @@ const userSchema = new Schema(
       type: String,
       required: true,
     },
-    // verify: {
-    //   type: Boolean,
-    //   default: false,
-    // },
-    // verificationToken: {
-    //   type: String,
-    //   required: [true, "Verify token is required"],
-    // },
   },
   { versionKey: false }
 );
@@ -61,7 +53,9 @@ userSchema.post("save", handleMongooseError);
 const authSchema = Joi.object({
   name: Joi.string().pattern(nameRegexp).required(),
   email: Joi.string().pattern(emailRegexp).required(),
-  password: Joi.string().pattern(passwordRegexp).required(),
+  password: Joi.string().pattern(passwordRegexp).required().messages({
+    'string.pattern.base': 'Password must meet the required criteria.',
+  }), 
   subscription: Joi.string()
     .valid("starter", "pro", "business")
     .default("starter"),
