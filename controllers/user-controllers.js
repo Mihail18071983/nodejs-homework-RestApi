@@ -31,7 +31,7 @@ const register = async (req, res) => {
     avatarURL,
   });
 
-  console.log('result: ' + result)
+  console.log("result: " + result);
 
   const payload = {
     id: result._id,
@@ -51,7 +51,7 @@ const register = async (req, res) => {
 };
 
 const login = async (req, res) => {
-  console.log('req.body',req.body)
+  console.log("req.body", req.body);
   const { email, password } = req.body;
   const user = await User.findOne({ email });
 
