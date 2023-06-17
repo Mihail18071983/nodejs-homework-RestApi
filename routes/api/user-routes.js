@@ -6,7 +6,7 @@ const { validateBody } = require("../../utils");
 
 const { authenticate, upload } = require("../../middlewares");
 
-const { authSchema, refreshSchema } = require("../../models/user-schema");
+const { registerSchema, refreshSchema, loginSchema } = require("../../models/user-schema");
 
 const router = express.Router();
 
@@ -14,9 +14,9 @@ const router = express.Router();
 //   res.send('Welcome to Phone book API!');
 // });
 
-router.post("/register", validateBody(authSchema), ctrl.register);
+router.post("/register", validateBody(registerSchema), ctrl.register);
 
-router.post("/login", validateBody(authSchema), ctrl.login);
+router.post("/login", validateBody(loginSchema), ctrl.login);
 
 router.post("/refresh", validateBody(refreshSchema), ctrl.refresh);
 
@@ -29,7 +29,7 @@ router.patch('/avatars', authenticate, upload.single('avatar'), ctrl.updateAvata
 router.patch(
   "/",
   authenticate,
-  validateBody(authSchema),
+  validateBody(registerSchema),
   ctrl.updateUserSubscription
 );
 

@@ -50,12 +50,22 @@ const userSchema = new Schema(
 
 userSchema.post("save", handleMongooseError);
 
-const authSchema = Joi.object({
+const registerSchema = Joi.object({
   name: Joi.string().pattern(nameRegexp).required(),
   email: Joi.string().pattern(emailRegexp).required(),
   password: Joi.string().pattern(passwordRegexp).required().messages({
     'string.pattern.base': 'Password must meet the required criteria.',
-  }), 
+  }),
+  subscription: Joi.string()
+    .valid("starter", "pro", "business")
+    .default("starter"),
+});
+
+const loginSchema = Joi.object({
+  email: Joi.string().pattern(emailRegexp).required(),
+  password: Joi.string().pattern(passwordRegexp).required().messages({
+    'string.pattern.base': 'Password must meet the required criteria.',
+  }),
   subscription: Joi.string()
     .valid("starter", "pro", "business")
     .default("starter"),
@@ -71,4 +81,4 @@ const refreshSchema = Joi.object({
 
 const User = model("user", userSchema);
 
-module.exports = { User, authSchema, emailSchema, refreshSchema };
+module.exports = { User, registerSchema, emailSchema, refreshSchema, loginSchema };

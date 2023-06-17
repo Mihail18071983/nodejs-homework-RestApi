@@ -10,8 +10,9 @@ const { ACCESS_SECRET_KEY } = process.env;
 const authenticate = async (req, res, next) => {
     console.log('authenticate middleware called');
     const { authorization = " " } = req.headers;
-    console.log(authorization)
+    console.log('authorization', authorization)
     const [bearer, token] = authorization.split(" ");
+    console.log("token", token);
     if (bearer !== "Bearer") {
         next(HttpError(401));
     }
