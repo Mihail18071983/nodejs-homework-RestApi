@@ -29,13 +29,13 @@ const getContactById = async (req, res) => {
 
 const addContact = async (req, res) => {
   const { _id: owner } = req.user;
-  const { email, phone } = req.body;
+  const {  email, phone } = req.body;
   const existingContact = await Contact.findOne({
-    $or: [{ email }, { phone }],
+    $or: [ { email }, { phone }],
   });
-if (existingContact) {
-  throw HttpError(409, "Email or phone already in use");
-}
+  if (existingContact) {
+    throw HttpError(409, "Email or phone already in use");
+  }
   const result = await Contact.create({ ...req.body, owner });
   res.status(201).json(result);
 };
