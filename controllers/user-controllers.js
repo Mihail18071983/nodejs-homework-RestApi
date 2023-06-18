@@ -37,7 +37,7 @@ const register = async (req, res) => {
     id: result._id,
   };
 
-  const accessToken = jwt.sign(payload, ACCESS_SECRET_KEY, { expiresIn: "2m" });
+  const accessToken = jwt.sign(payload, ACCESS_SECRET_KEY, { expiresIn: "15s" });
   const refreshToken = jwt.sign(payload, REFRESH_SECRET_KEY, {
     expiresIn: "7d",
   });
@@ -68,7 +68,7 @@ const login = async (req, res) => {
     id: user._id,
   };
 
-  const accessToken = jwt.sign(payload, ACCESS_SECRET_KEY, { expiresIn: "2m" });
+  const accessToken = jwt.sign(payload, ACCESS_SECRET_KEY, { expiresIn: "15s" });
   const refreshToken = jwt.sign(payload, REFRESH_SECRET_KEY, {
     expiresIn: "7d",
   });
@@ -101,7 +101,7 @@ const refresh = async (req, res) => {
     };
 
     const accessToken = jwt.sign(payload, ACCESS_SECRET_KEY, {
-      expiresIn: "2m",
+      expiresIn: "15s",
     });
     const refreshToken = jwt.sign(payload, REFRESH_SECRET_KEY, {
       expiresIn: "7d",
