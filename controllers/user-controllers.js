@@ -84,16 +84,50 @@ const login = async (req, res) => {
   });
 };
 
+// const refresh = async (req, res) => {
+//   const { refreshToken: token } = req.body;
+//   console.log("refreshToken", token);
+//   try {
+//     const { id } = jwt.verify(token, REFRESH_SECRET_KEY);
+//     const isExistUser = await User.findOne({ refreshToken: token });
+//     console.log("existedUser", isExistUser);
+
+//     if (!isExistUser) {
+//       throw HttpError(403, "Token invalid");
+//     }
+
+//     const payload = {
+//       id,
+//     };
+
+//     const accessToken = jwt.sign(payload, ACCESS_SECRET_KEY, {
+//       expiresIn: "15s",
+//     });
+//     const refreshToken = jwt.sign(payload, REFRESH_SECRET_KEY, {
+//       expiresIn: "7d",
+//     });
+//     isExistUser.accessToken = accessToken;
+//     isExistUser.refreshToken = refreshToken;
+    
+//     res.json({
+//       accessToken,
+//       refreshToken,
+//     });
+//   } catch (err) {
+//     throw HttpError(403, err.message);
+//   }
+// };
+
 const refresh = async (req, res) => {
   const { refreshToken: token } = req.body;
-  console.log("refreshToken", token);
+  console.log('refreshToken', token);
   try {
     const { id } = jwt.verify(token, REFRESH_SECRET_KEY);
     const isExistUser = await User.findOne({ refreshToken: token });
-    console.log("existedUser", isExistUser);
+    console.log('existedUser', isExistUser);
 
     if (!isExistUser) {
-      throw HttpError(403, "Token invalid");
+      throw HttpError(403, 'Token invalid');
     }
 
     const payload = {
@@ -101,14 +135,15 @@ const refresh = async (req, res) => {
     };
 
     const accessToken = jwt.sign(payload, ACCESS_SECRET_KEY, {
-      expiresIn: "15s",
+      expiresIn: '15s',
     });
     const refreshToken = jwt.sign(payload, REFRESH_SECRET_KEY, {
-      expiresIn: "7d",
+      expiresIn: '7d',
     });
-    isExistUser.accessToken = accessToken;
-    isExistUser.refreshToken = refreshToken;
-    
+    await User.findByIdAndUpdate(isExistUser._id, {
+      accessToken,
+      refreshToken,
+    });
     res.json({
       accessToken,
       refreshToken,
