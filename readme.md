@@ -36,29 +36,29 @@ import axios from 'axios';
 
 // Register a new user
 axios.post('https://restapi-contact-book.onrender.com/api/users/register', {
-  email: 'john@example.com',
-  password: 'password123',
+email: 'john@example.com',
+password: 'password123',
 });
 
 // Log in with user credentials
 axios.post('https://restapi-contact-book.onrender.com/api/users/login', {
-  email: 'john@example.com',
-  password: 'password123',
+email: 'john@example.com',
+password: 'password123',
 });
 
 // Get current user's details (requires authentication)
 axios.get('https://restapi-contact-book.onrender.com/api/users/current', {
-  headers: {
-    Authorization: 'Bearer {jwtToken}',
-  },
+headers: {
+Authorization: 'Bearer {jwtToken}',
+},
 });
 
 // Update user's avatar (requires authentication)
 axios.patch('https://restapi-contact-book.onrender.com/api/users/avatars', formData, {
-  headers: {
-    Authorization: 'Bearer {jwtToken}',
-    'Content-Type': 'multipart/form-data',
-  },
+headers: {
+Authorization: 'Bearer {jwtToken}',
+'Content-Type': 'multipart/form-data',
+},
 });
 
 // Get all contacts
@@ -66,15 +66,15 @@ axios.get('https://restapi-contact-book.onrender.com/api/contacts');
 
 // Create a new contact
 axios.post('https://restapi-contact-book.onrender.com/api/contacts', {
-  name: 'Jane Doe',
-  phone: '1234567890',
-  email: 'jane@example.com',
+name: 'Jane Doe',
+number: '1234567890',
+email: 'jane@example.com',
 });
 
 // Update a specific contact by ID
 axios.put('https://restapi-contact-book.onrender.com/api/contacts/{contactId}', {
-  name: 'Updated Name',
-  phone: '9876543210',
+name: 'Updated Name',
+number: '9876543210',
 });
 
 // Delete a specific contact by ID

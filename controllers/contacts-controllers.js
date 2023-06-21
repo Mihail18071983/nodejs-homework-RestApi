@@ -15,6 +15,7 @@ const getAllContacts = async (req, res) => {
     "owner",
     "email"
   );
+  console.log('all contacts', result);
   res.json(result);
 };
 
@@ -29,19 +30,24 @@ const getContactById = async (req, res) => {
 
 const addContact = async (req, res) => {
   const { _id: owner } = req.user;
-  const {  email, phone } = req.body;
+  const { email, number } = req.body;
+  console.log("req body", req.body);
   const existingContact = await Contact.findOne({
-    $or: [ { email }, { phone }],
+    $or: [{ email }, { number }],
   });
   if (existingContact) {
-    throw HttpError(409, "Email or phone already in use");
+    throw HttpError(409, "Email or number already in use");
   }
   const result = await Contact.create({ ...req.body, owner });
-  res.status(201).json(result);
+  console.log("added contact", result);
+  res
+    .status(201)
+    .json(result);
 };
 
 const deleteContactById = async (req, res) => {
   const { contactId: id } = req.params;
+  console.log("req params", req.params);
   const result = await Contact.findByIdAndDelete(id);
   if (!result) {
     throw HttpError(404);

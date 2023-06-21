@@ -36,10 +36,10 @@ const userSchema = new Schema(
     refreshToken: {
       type: String,
     },
-    owner: {
-      type: Schema.Types.ObjectId,
-      ref: "user",
-    },
+    // owner: {
+    //   type: Schema.Types.ObjectId,
+    //   ref: "user",
+    // },
     avatarURL: {
       type: String,
       required: true,

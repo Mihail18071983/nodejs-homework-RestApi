@@ -11,7 +11,7 @@ const { registerSchema, refreshSchema, loginSchema } = require("../../models/use
 const router = express.Router();
 
 // router.get('/', (req, res) => {
-//   res.send('Welcome to Phone book API!');
+//   res.send('Welcome to number book API!');
 // });
 
 router.post("/register", validateBody(registerSchema), ctrl.register);
