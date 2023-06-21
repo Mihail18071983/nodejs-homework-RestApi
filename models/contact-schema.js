@@ -65,7 +65,6 @@ const updateSchema = Joi.object({
     "string.min": "Name must be at least 3 characters",
   }),
   email: Joi.string()
-    .pattern(/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/)
     .messages({
       "string.email": "Email mast be valid",
       "string.pattern.base": "Email does not have a right format",
