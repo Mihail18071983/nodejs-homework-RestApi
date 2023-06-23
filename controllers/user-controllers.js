@@ -37,9 +37,9 @@ const register = async (req, res) => {
     id: result._id,
   };
 
-  const accessToken = jwt.sign(payload, ACCESS_SECRET_KEY, { expiresIn: "15m" });
+  const accessToken = jwt.sign(payload, ACCESS_SECRET_KEY, { expiresIn: "15s" });
   const refreshToken = jwt.sign(payload, REFRESH_SECRET_KEY, {
-    expiresIn: "7d",
+    expiresIn: "30s",
   });
   await User.findByIdAndUpdate(result._id, { accessToken, refreshToken });
   res.status(201).json({
@@ -68,9 +68,9 @@ const login = async (req, res) => {
     id: user._id,
   };
 
-  const accessToken = jwt.sign(payload, ACCESS_SECRET_KEY, { expiresIn: "15m" });
+  const accessToken = jwt.sign(payload, ACCESS_SECRET_KEY, { expiresIn: "15s" });
   const refreshToken = jwt.sign(payload, REFRESH_SECRET_KEY, {
-    expiresIn: "7d",
+    expiresIn: "30s",
   });
   const updatedUser = await User.findByIdAndUpdate(user._id, { accessToken, refreshToken });
   console.log("Updated user", updatedUser);
@@ -103,10 +103,10 @@ const refresh = async (req, res) => {
     };
 
     const accessToken = jwt.sign(payload, ACCESS_SECRET_KEY, {
-      expiresIn: '15m',
+      expiresIn: '15s',
     });
     const refreshToken = jwt.sign(payload, REFRESH_SECRET_KEY, {
-      expiresIn: '7d',
+      expiresIn: '30s',
     });
     await User.findByIdAndUpdate(isExistUser._id, {
       accessToken,
